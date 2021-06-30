@@ -9,7 +9,9 @@ import paulkimphk.com.example.fruitamex.service.FruitSellerService
 class FruitSellerController(private val service: FruitSellerService) {
 
     @PostMapping
-    fun calculateFruitsCost(@RequestParam("apples") apples: Int, @RequestParam("oranges") oranges: Int): FruitInvoice {
-        return service.calculateFruitsCost(apples, oranges)
+    fun calculateFruitsCost(@RequestParam("apples") apples: Int, @RequestParam("oranges") oranges: Int,
+                            @RequestParam("applePromo") applePromo: Boolean,
+                            @RequestParam("orangePromo") orangePromo: Boolean): FruitInvoice {
+        return service.calculateFruitsCost(apples, oranges, applePromo, orangePromo)
     }
 }
