@@ -2,6 +2,7 @@ package paulkimphk.com.example.fruitamex.model
 
 
 data class FruitInvoice (
+    val id: String,
     val appleCount: Int,
     val orangeCount: Int,
     val applesCost: Double,

@@ -1,15 +1,17 @@
 package paulkimphk.com.example.fruitamex.service
 
 import org.springframework.stereotype.Service
+import paulkimphk.com.example.fruitamex.datasource.FruitInvoiceDataSource
 import paulkimphk.com.example.fruitamex.model.FruitInvoice
 import java.lang.IllegalArgumentException
+import java.util.*
 
 @Service
-class FruitSellerService {
+class FruitSellerService(private val dataSource: FruitInvoiceDataSource) {
     private val applePrice = .6
     private val orangePrice = .25
 
-    fun calculateFruitsCost(apples: Int, oranges: Int, applePromo: Boolean, orangePromo: Boolean): FruitInvoice {
+    fun calculateAndStoreFruitsCost(apples: Int, oranges: Int, applePromo: Boolean, orangePromo: Boolean): FruitInvoice {
         // Negative numbers will give undesirable results for a fruit shop
         if (apples < 0 || oranges < 0) {
             throw IllegalArgumentException("Invalid number of apples or oranges")
@@ -37,10 +39,18 @@ class FruitSellerService {
         }
 
         val costTotal = applesTotal + orangesTotal
+        var id = UUID.randomUUID().toString()
 
-        // Creates the invoice to be returned
-        val invoice = FruitInvoice(apples, oranges, applesTotal,
+        // Creates the invoice to be stored in data
+        val invoice = FruitInvoice(id, apples, oranges, applesTotal,
                                 orangesTotal, costTotal)
-        return invoice
+
+
+        return dataSource.storeFruitInvoice(invoice)
     }
+
+
+    fun getFruitInvoices(): Collection<FruitInvoice> = dataSource.retrieveFruitInvoices()
+
+    fun getFruitInvoice(invoiceId: String): FruitInvoice = dataSource.retrieveFruitInvoice(invoiceId)
 }
